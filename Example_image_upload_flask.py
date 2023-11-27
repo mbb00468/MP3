@@ -28,28 +28,33 @@ def index():
     </form>
     '''
 
-@app.route('/', methods=['POST'])
+
+@app.route('/upload', methods=['POST'])
 def upload_file():
-    # check if the post request has the file part
-    if 'file' not in request.files:
-        flash('No file part')
-        return redirect(request.url)
-    
-    file = request.files['file']
-    
-    # if user does not select file, browser also submit an empty part without filename
-    if file.filename == '':
-        flash('No selected file')
-        return redirect(request.url)
-    
-    if file and allowed_file(file.filename):
-        filename = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
-        file.save(filename)
-        flash('File successfully uploaded and saved!')
-        return redirect(request.url)
-    
-    flash('Invalid file type. Please upload an image.')
-    return redirect(request.url)
+    # ... (previous code)
 
+    model_choice = request.form.get('model_choice')
 
-app.run(debug=True)
+    if model_choice == 'vit':
+        # Call function for ViT model prediction
+        # Replace the following line with the actual code for ViT prediction
+        flash('ViT model prediction result: [Replace with the result]')
+        return redirect(request.url)
+
+    elif model_choice == 'yolo':
+        # Call function for YOLO model prediction
+        # Replace the following line with the actual code for YOLO prediction
+        flash('YOLO model prediction result: [Replace with the result]')
+        return redirect(url_for('yolo_result', filename=file.filename))
+
+    else:
+        flash('Invalid model choice')
+        return redirect(request.url)
+
+@app.route('/yolo_result/<filename>')
+def yolo_result(filename):
+    result_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    return render_template('yolo_result.html', result_path=result_path)
+
+if __name__ == '__main__':
+    app.run(debug=True)
