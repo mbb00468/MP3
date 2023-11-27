@@ -1,6 +1,12 @@
 from transformers import ViTImageProcessor, ViTForImageClassification
 from PIL import Image
 from flask import Flask, render_template, request
+import os
+from flask import flash, redirect
+from ultralytics import YOLO
+from PIL import Image
+import warnings
+warnings.filterwarnings('ignore')
 
 app = Flask(__name__)
 
@@ -17,17 +23,21 @@ if not os.path.exists(UPLOAD_FOLDER):
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
-    return '''
-    <!doctype html>
-    <title>Upload an Image</title>
-    <h1>Upload an Image</h1>
-    <form method=post enctype=multipart/form-data>
-      <input type=file name=file>
-      <input type=submit value=Upload>
-    </form>
-    '''
+    if request.method == 'POST':
+        # Handle the form submission here
+        return 'Form submitted!'
+    else:
+        return '''
+        <!doctype html>
+        <title>Upload an Image</title>
+        <h1>Upload an Image</h1>
+        <form method=post enctype=multipart/form-data>
+          <input type=file name=file>
+          <input type=submit value=Upload>
+        </form>
+        '''
 
 
 @app.route('/upload', methods=['POST'])
@@ -86,26 +96,29 @@ def predict_vit(image):
     
     
     # Load a pretrained YOLOv8n model
+# Load a pretrained YOLO model (replace with the actual YOLO model loading logic)
 yolo_model = YOLO('yolov8n.pt')
+
+
 
 def predict_yolo(image_path):
     try:
-        # Run inference on the provided image
-        results = yolo_model(image_path, verbose=False)
+        results = model(image_path, verbose=False)  # results list
 
-        # Save results as an image
-        for i, result in enumerate(results):
-            im_array = result.plot()  # plot a BGR numpy array of predictions
+        for r in results:
+            im_array = r.plot()  # plot a BGR numpy array of predictions
             im = Image.fromarray(im_array[..., ::-1])  # RGB PIL image
-            im.save(f'results_{i}.png')  # save image
+            # im.show()  # show image
+            im.save('results.png')  # save image
 
-        # Get predicted classes
-        pred_classes = []
-        for result in results:
-            boxes = result.boxes.cpu().numpy()
-            for box in boxes:
-                pred_classes.append(result.names[int(box.cls[0])])
+        predclass = []
 
-        return pred_classes
+        for result in results:  # iterate results
+            boxes = result.boxes.cpu().numpy()  # get boxes on the CPU in numpy
+            for box in boxes:  # iterate boxes
+                predclass.append(result.names[int(box.cls[0])])
+
+        return predclass  # return the list of predicted classes
+
     except Exception as e:
         return f"Error predicting with YOLO: {str(e)}"
