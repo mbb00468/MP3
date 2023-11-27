@@ -1,5 +1,6 @@
-from flask import Flask, request, redirect, url_for, flash, render_template
-import os
+from transformers import ViTImageProcessor, ViTForImageClassification
+from PIL import Image
+from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
@@ -58,3 +59,53 @@ def yolo_result(filename):
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+
+# Load the ViT model and processor
+feature_extractor = ViTImageProcessor.from_pretrained('google/vit-base-patch16-224')
+model = ViTForImageClassification.from_pretrained('google/vit-base-patch16-224')
+
+def predict_vit(image):
+    try:
+        # Extract features (patches) from the image
+        inputs = feature_extractor(images=image, return_tensors="pt")
+
+        # Predict by feeding the model
+        outputs = model(**inputs)
+
+        # Convert outputs to logits
+        logits = outputs.logits
+
+        # Model predicts one of the classes by picking the logit with the highest probability
+        predicted_class_idx = logits.argmax(-1).item()
+
+        predicted_class = model.config.id2label[predicted_class_idx]
+        return predicted_class
+    except Exception as e:
+        return f"Error predicting with ViT: {str(e)}"
+    
+    
+    # Load a pretrained YOLOv8n model
+yolo_model = YOLO('yolov8n.pt')
+
+def predict_yolo(image_path):
+    try:
+        # Run inference on the provided image
+        results = yolo_model(image_path, verbose=False)
+
+        # Save results as an image
+        for i, result in enumerate(results):
+            im_array = result.plot()  # plot a BGR numpy array of predictions
+            im = Image.fromarray(im_array[..., ::-1])  # RGB PIL image
+            im.save(f'results_{i}.png')  # save image
+
+        # Get predicted classes
+        pred_classes = []
+        for result in results:
+            boxes = result.boxes.cpu().numpy()
+            for box in boxes:
+                pred_classes.append(result.names[int(box.cls[0])])
+
+        return pred_classes
+    except Exception as e:
+        return f"Error predicting with YOLO: {str(e)}"
