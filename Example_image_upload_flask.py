@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, url_for, flash
+from flask import Flask, request, redirect, url_for, flash, render_template
 import os
 
 app = Flask(__name__)
@@ -38,14 +38,14 @@ def upload_file():
     if model_choice == 'vit':
         # Call function for ViT model prediction
         # Replace the following line with the actual code for ViT prediction
-        flash('ViT model prediction result: [Replace with the result]')
-        return redirect(request.url)
+        prediction_result = 'ViT model prediction result: [Replace with the result]'
+        return render_template('result.html', result=prediction_result)
 
     elif model_choice == 'yolo':
         # Call function for YOLO model prediction
         # Replace the following line with the actual code for YOLO prediction
-        flash('YOLO model prediction result: [Replace with the result]')
-        return redirect(url_for('yolo_result', filename=file.filename))
+        yolo_prediction_result = 'YOLO model prediction result: [Replace with the result]'
+        return render_template('yolo_result.html', result=yolo_prediction_result)
 
     else:
         flash('Invalid model choice')
