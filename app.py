@@ -12,8 +12,9 @@ from transformers import ViTFeatureExtractor, ViTForImageClassification
 import numpy as np
 from ultralytics import YOLO
 
+# Example configuration in your Flask app
+app = Flask(__name__, static_url_path='/uploads')
 
-app = Flask(__name__)
 
 # Configuration
 UPLOAD_FOLDER = 'uploads'
