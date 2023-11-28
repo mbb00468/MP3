@@ -71,7 +71,7 @@ def model_choice():
             file_path = session.get('file_path')
 
             if not file_path:
-                flash('File path not found. Please upload a file.')
+                print('File path not found. Please upload a file.')
                 return redirect(url_for('index'))
 
             if model_choice == 'vit':
@@ -84,10 +84,9 @@ def model_choice():
                                        bounding_boxes=bounding_boxes)
 
     except KeyError:
-        flash('File path not found in the session. Please upload a file.')
+        print('File path not found in the session. Please upload a file.')
         return redirect(url_for('index'))
     except Exception as e:
-        flash(f"An error occurred: {str(e)}")
         print(f"An error occurred: {str(e)}")
         print('An error occurred. Please try again.')
         return render_template('model_choice.html')
