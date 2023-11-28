@@ -22,57 +22,6 @@ if not os.path.exists(UPLOAD_FOLDER):
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-file = request.files['file']
-if file and allowed_file(file.filename):
-    filename = secure_filename(file.filename)
-    file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-
-@app.route('/', methods=['GET', 'POST'])
-def index():
-    if request.method == 'POST':
-        # Handle the form submission here
-        return 'Form submitted!'
-    else:
-        return '''
-        <!doctype html>
-        <title>Upload an Image</title>
-        <h1>Upload an Image</h1>
-        <form method=post enctype=multipart/form-data>
-          <input type=file name=file>
-          <input type=submit value=Upload>
-        </form>
-        '''
-
-
-@app.route('/upload', methods=['POST'])
-def upload_file():
-    # ... (previous code)
-
-    model_choice = request.form.get('model_choice')
-
-    if model_choice == 'vit':
-        # Call function for ViT model prediction
-        # Replace the following line with the actual code for ViT prediction
-        prediction_result = 'ViT model prediction result: [Replace with the result]'
-        return render_template('result.html', result=prediction_result)
-
-    elif model_choice == 'yolo':
-        # Call function for YOLO model prediction
-        # Replace the following line with the actual code for YOLO prediction
-        yolo_prediction_result = 'YOLO model prediction result: [Replace with the result]'
-        return render_template('yolo_result.html', result=yolo_prediction_result)
-
-    else:
-        flash('Invalid model choice')
-        return redirect(request.url)
-
-@app.route('/yolo_result/<filename>')
-def yolo_result(filename):
-    result_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-    return render_template('yolo_result.html', result_path=result_path)
-
-if __name__ == '__main__':
-    app.run(debug=True)
 
 
 # Load the ViT model and processor
@@ -126,3 +75,54 @@ def predict_yolo(image_path):
 
     except Exception as e:
         return f"Error predicting with YOLO: {str(e)}"
+
+
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    if request.method == 'POST':
+        # Handle the POST request (e.g., process the uploaded file)
+        return render_template('index.html')
+    else:
+        # Render the HTML form for GET requests
+        return '''
+        <!doctype html>
+        <title>Upload an Image</title>
+        <h1>Upload an Image</h1>
+        <form method=post enctype=multipart/form-data>
+          <input type=file name=file>
+          <input type=submit value=Upload>
+        </form>
+        '''
+
+
+
+@app.route('/upload', methods=['POST'])
+def upload_file():
+    # ... (previous code)
+
+    model_choice = request.form.get('model_choice')
+
+    if model_choice == 'vit':
+        # Call function for ViT model prediction
+        
+        prediction_result = predict_vit()
+        return render_template('result.html', result=prediction_result)
+
+    elif model_choice == 'yolo':
+        # Call function for YOLO model prediction
+        # Replace the following line with the actual code for YOLO prediction
+        yolo_prediction_result = 'YOLO model prediction result: [Replace with the result]'
+        return render_template('yolo_result.html', result=yolo_prediction_result)
+
+    else:
+        flash('Invalid model choice')
+        return redirect(request.url)
+
+@app.route('/yolo_result/<filename>')
+def yolo_result(filename):
+    result_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    return render_template('yolo_result.html', result_path=result_path)
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
