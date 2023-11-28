@@ -21,7 +21,7 @@
     <h2>YOLO Prediction Result</h2>
     
     <div style="position: relative;">
-        <img src="{{ url_for('model_choice') }}" alt="YOLO Prediction" id="result-image">
+        <img src="{{ result_image }}" alt="YOLO Prediction" id="result-image">
         
         {% for box in bounding_boxes %}
             <div class="bounding-box" style="top: {{ box.top }}px; left: {{ box.left }}px; width: {{ box.right - box.left }}px; height: {{ box.bottom - box.top }}px;">

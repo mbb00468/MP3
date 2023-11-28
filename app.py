@@ -28,7 +28,7 @@ if not os.path.exists(UPLOAD_FOLDER):
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-# Import statements (add the necessary imports)
+
 
 @app.route('/')
 def index():
@@ -79,9 +79,8 @@ def model_choice():
                 return render_template('vit_result.html', result=result)
 
             elif model_choice == 'yolo':
-                result_image_path, bounding_boxes = predict_yolo(file_path)
-                return render_template('yolo_result.html', result_image=result_image_path,
-                                       bounding_boxes=bounding_boxes)
+                result_image_path= predict_yolo(file_path)
+                return render_template('yolo_result.html', result_image=result_image_path)
 
     except KeyError:
         print('File path not found in the session. Please upload a file.')
@@ -142,12 +141,12 @@ def predict_yolo(file_path):
         for i, result in enumerate(results):
             im_array = result.plot()
             im = Image.fromarray(im_array[..., ::-1])
-            result_image_path = f'result_{i}.jpg'
+            result_image_path = os.path.join(UPLOAD_FOLDER, f'result_{i}.jpg')
             im.save(result_image_path)
             print(result_image_path)
 
         print(f"YOLO prediction result: {bounding_boxes}")
-        return result_image_path, bounding_boxes
+        return result_image_path
     except Exception as e:
         return f"Error predicting with YOLO: {str(e)}", []
 
