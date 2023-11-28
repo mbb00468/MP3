@@ -128,8 +128,10 @@ def upload_file():
     else:
         flash('Invalid model choice')
         return redirect(request.url)
+    
+    
 
-@app.route('/yolo_result/<filename>')
+@app.route('/yolo_result')
 def yolo_result(image):
     try:
 
