@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, url_for, flash
+from flask import Flask, request, redirect, url_for, flash, render_template
 import os
 
 app = Flask(__name__)
@@ -18,18 +18,7 @@ def allowed_file(filename):
 
 @app.route('/')
 def index():
-    return '''
-<!doctype html>
-<!doctype html>
-<title>Upload an Image</title>
-<h1>Upload an Image</h1>
-<form method="post" enctype="multipart/form-data" action="/upload">
-  <input type="file" name="file">
-  <input type="submit" value="Upload">
-</form>
-
-
-    '''
+    return render_template('home.html')
 
 @app.route('/', methods=['POST'])
 def upload_file():
@@ -48,11 +37,39 @@ def upload_file():
     if file and allowed_file(file.filename):
         filename = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
         file.save(filename)
-        flash('File successfully uploaded and saved!')
-        return redirect(request.url)
-    
+        print('File successfully uploaded and saved!')
+        return render_template('model_choice.html')
+
     flash('Invalid file type. Please upload an image.')
     return redirect(request.url)
 
+@app.route('/', methods=['GET', 'POST'])
+def model_choice():
+    try:
+        if request.method == 'POST':
 
-app.run(debug=True)
+            # Get the file path from the session or form data
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], request.files['file'].filename)
+
+            if model_choice == 'vit':
+                result = predict_vit(file_path)
+                print(f"ViT prediction result: {result}")
+                return render_template('vit_result.html', result=result)
+
+            elif model_choice == 'yolo':
+                result = predict_yolo(file_path)
+                print(f"YOLO prediction result: {result}")
+                return render_template('yolo_result.html', result=result)
+
+            else:
+                flash('Invalid model choice')
+                print('Invalid model choice')
+                return redirect(url_for('model_choice'))
+
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        flash('An error occurred. Please try again.')
+        return render_template('home.html')
+
+if __name__ == '__main__':
+    app.run(debug=True)

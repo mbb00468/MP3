@@ -1,9 +1,19 @@
-<!doctype html>
-<title>Image Prediction Tool</title>
-<h1>Upload an Image</h1>
-<form method="post" action="/model_choice" enctype="multipart/form-data">
-    <input type="file" name="file" accept=".png, .jpg, .jpeg, .gif">
-  <input type=submit value=Upload>
-</form>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Prediction Tool</title>
+</head>
+<body>
+    <h1>Upload an Image</h1>
+    <form action="{{ url_for('upload_file') }}" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".png, .jpg, .jpeg, .gif" required>
+        <input type="submit" value="Upload">
+    </form>
+</body>
+</html>
+
 
 

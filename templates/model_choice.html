@@ -8,17 +8,16 @@
 </head>
 <body>
     <h2>Choose a Model</h2>
-    <form action="/model_choice" method="post" enctype="multipart/form-data">
-        <br>
-        <label>
-            <input type="radio" name="model_choice" value="vit" checked> ViT Model (Text Prediction) - This model predicts text content in the image.
-        </label>
-        <br>
-        <label>
-            <input type="radio" name="model_choice" value="yolo"> YOLO Model (Bounded Boxes) - This model predicts objects in the image with bounding boxes.
-        </label>
-        <br>
-        <button type="submit">Predict</button>
-    </form>
+<form action="{{ url_for('model_choice') }}" method="post">
+    <input type="hidden" name="file" value="{{ file_path }}">
+    <label for="model_choice">Select a model:</label>
+    <select name="model_choice" id="model_choice" required>
+        <option value="vit">ViT</option>
+        <option value="yolo">YOLO</option>
+    </select>
+    <input type="submit" value="Submit">
+</form>
 </body>
 </html>
+
+
