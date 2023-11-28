@@ -76,6 +76,13 @@ def predict_yolo(image):
 @app.route('/', methods=['GET', 'POST'])
 def home():
     if request.method == 'POST':
+        
+        file = request.files['file']
+        # Save the file to your desired location
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
+        
+        session['file_path'] = file.filename
+        
         if 'file' not in request.files:
             flash('No file part')
             return redirect(url_for('home'))
@@ -107,8 +114,6 @@ def home():
 def model_choice():
     try:
 
-        file = request.files['file']
-        model_choice = request.form.get('model_choice')
 
         if file.filename == '':
             flash('No selected file')

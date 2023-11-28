@@ -8,7 +8,7 @@
 </head>
 <body>
     <h2>Choose a Model</h2>
-<form action="{{ url_for('model_choice') }}" method="post">
+    <form method="post" action="/model_choice" enctype="multipart/form-data">
     <input type="hidden" name="file" value="{{ file_path }}">
     <label for="model_choice">Select a model:</label>
     <select name="model_choice" id="model_choice" required>
