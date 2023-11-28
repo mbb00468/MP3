@@ -6,6 +6,7 @@ from flask import flash, redirect
 from ultralytics import YOLO
 from PIL import Image
 import warnings
+import io
 warnings.filterwarnings('ignore')
 
 app = Flask(__name__)
@@ -48,21 +49,20 @@ def predict_vit(image):
         return f"Error predicting with ViT: {str(e)}"
     
     
-    # Load a pretrained YOLOv8n model
-# Load a pretrained YOLO model (replace with the actual YOLO model loading logic)
+
 yolo_model = YOLO('yolov8n.pt')
 
 
 
-def predict_yolo(image_path):
+def predict_yolo(image):
     try:
-        results = model(image_path, verbose=False)  # results list
+        results = model(image, verbose=False)  # results list
 
         for r in results:
             im_array = r.plot()  # plot a BGR numpy array of predictions
             im = Image.fromarray(im_array[..., ::-1])  # RGB PIL image
             # im.show()  # show image
-            im.save('results.png')  # save image
+            im.save('static/results.png')  # save image
 
         predclass = []
 
@@ -103,10 +103,14 @@ def upload_file():
     model_choice = request.form.get('model_choice')
 
     if model_choice == 'vit':
-        # Call function for ViT model prediction
-        
-        prediction_result = predict_vit()
-        return render_template('result.html', result=prediction_result)
+        uploaded_file = request.files['file']
+        if uploaded_file:
+            # Convert the uploaded file to a PIL Image
+            image = Image.open(io.BytesIO(uploaded_file.read()))
+            
+            # Process the image and get the prediction result
+            result = predict_vit(image)
+            return render_template('index.html', result=result)
 
     elif model_choice == 'yolo':
         # Call function for YOLO model prediction
