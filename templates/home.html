@@ -1,8 +1,8 @@
 <!doctype html>
 <title>Image Prediction Tool</title>
 <h1>Upload an Image</h1>
-<form method=post enctype=multipart/form-data>
-  <input type=file name=file>
+<form method="post" action="/model_choice" enctype="multipart/form-data">
+    <input type="file" name="file" accept=".png, .jpg, .jpeg, .gif">
   <input type=submit value=Upload>
 </form>
 
