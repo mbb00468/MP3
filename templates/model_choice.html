@@ -1,4 +1,4 @@
-<!-- index.html -->
+<!-- model_choice.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,8 +8,7 @@
 </head>
 <body>
     <h2>Choose a Model</h2>
-    <form action="/upload" method="post" enctype="multipart/form-data">
-        <input type="file" name="file" accept="image/*" required>
+    <form action="/model_choice" method="post" enctype="multipart/form-data">
         <br>
         <label>
             <input type="radio" name="model_choice" value="vit" checked> ViT Model (Text Prediction) - This model predicts text content in the image.
@@ -19,7 +18,7 @@
             <input type="radio" name="model_choice" value="yolo"> YOLO Model (Bounded Boxes) - This model predicts objects in the image with bounding boxes.
         </label>
         <br>
-        <button type="submit">Upload and Predict</button>
+        <button type="submit">Predict</button>
     </form>
 </body>
 </html>
