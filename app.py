@@ -25,11 +25,12 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-# Load the ViT model and processor
-feature_extractor = ViTImageProcessor.from_pretrained('google/vit-base-patch16-224')
-model = ViTForImageClassification.from_pretrained('google/vit-base-patch16-224')
 
 def predict_vit(image):
+    # Load the ViT model and processor
+    feature_extractor = ViTImageProcessor.from_pretrained('google/vit-base-patch16-224')
+    model = ViTForImageClassification.from_pretrained('google/vit-base-patch16-224')
+
     try:
         # Extract features (patches) from the image
         inputs = feature_extractor(images=image, return_tensors="pt")
@@ -47,16 +48,18 @@ def predict_vit(image):
         return predicted_class
     except Exception as e:
         return f"Error predicting with ViT: {str(e)}"
-    
+
     
 
-yolo_model = YOLO('yolov8n.pt')
+
 
 
 
 def predict_yolo(image):
+    yolo_model = YOLO('yolov8n.pt')
+    
     try:
-        results = model(image, verbose=False)  # results list
+        results = yolo_model(image, verbose=False)  # results list
 
         for r in results:
             im_array = r.plot()  # plot a BGR numpy array of predictions
@@ -80,17 +83,28 @@ def predict_yolo(image):
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
-        # Handle the POST request (e.g., process the uploaded file)
-        return render_template('index.html')
+        # Check if the 'file' key is in the request.files dictionary
+        if 'file' not in request.files:
+            return render_template('index.html', error='No file part')
+
+        file = request.files['file']
+
+        # Check if the user submitted an empty form
+        if file.filename == '':
+            return render_template('index.html', error='No selected file')
+
+        # You can process the uploaded file here as needed
+        # For example, you might want to save it to the server or perform some analysis
+
+        # After processing, you can redirect or render another template
+        return render_template('index.html', filename=file.filename)
     else:
         # Render the HTML form for GET requests
         return render_template('home.html')
 
 
-
 @app.route('/upload', methods=['POST'])
 def upload_file():
-    # ... (previous code)
 
     model_choice = request.form.get('model_choice')
 
@@ -102,22 +116,38 @@ def upload_file():
             
             # Process the image and get the prediction result
             result = predict_vit(image)
-            return render_template('index.html', result=result)
+            return render_template('result.html', result=result)
 
     elif model_choice == 'yolo':
         # Call function for YOLO model prediction
+        result = predict_yolo(image)
         # Replace the following line with the actual code for YOLO prediction
         yolo_prediction_result = 'YOLO model prediction result: [Replace with the result]'
-        return render_template('yolo_result.html', result=yolo_prediction_result)
+        return render_template('yolo_result.html', result=predclass)
 
     else:
         flash('Invalid model choice')
         return redirect(request.url)
 
 @app.route('/yolo_result/<filename>')
-def yolo_result(filename):
-    result_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-    return render_template('yolo_result.html', result_path=result_path)
+def yolo_result(image):
+    try:
+
+        # Call the predict_yolo function to get predicted classes
+        pred_classes = predict_yolo(image)
+
+        # Convert the image to bytes for displaying in HTML
+        image_bytes = BytesIO()
+        image.save(image_bytes, format='PNG')
+        image_base64 = 'data:image/png;base64,' + base64.b64encode(image_bytes.getvalue()).decode('utf-8')
+
+        # Render the HTML template with the predicted classes and image source
+        return render_template('yolo_result.html', pred_classes=pred_classes, result_image=image_base64)
+
+    except Exception as e:
+        # Handle errors and return an error page or message
+        return f"Error: {str(e)}"
+
 
 if __name__ == '__main__':
     app.run(debug=True)
