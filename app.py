@@ -40,14 +40,18 @@ def upload_file():
     if file.filename == '':
         print('No selected file')
         return redirect(request.url)
-    
     if file and allowed_file(file.filename):
         # Use a fixed filename for overwriting
         filename = 'uploaded_image.jpg'
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+
+        # Remove the existing file if it exists
+        if os.path.exists(file_path):
+            os.remove(file_path)
+
         file.save(file_path)
         session['file_path'] = file_path  # Save the full file path in the session
-        #print('File successfully uploaded and saved')
+        print('File successfully uploaded and saved')
         return render_template('model_choice.html')
 
     print('Invalid file type. Please upload an image.')
