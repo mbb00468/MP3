@@ -99,7 +99,7 @@ def predict_vit(file_path):
 
 def predict_yolo(file_path):
     try:
-        model = YOLO('yolov8n.pt')
+        model = YOLO('static\yolov8n.pt')
         results = model(file_path)
 
         # Use a fixed filename for the result image

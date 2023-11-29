@@ -1,15 +1,14 @@
-/* style2.css */
 body {
-    font-family: 'Merriweather', serif; /* Use Merriweather font for the body */
+    font-family: 'Merriweather', serif;
     margin: 0;
     padding: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh;
-    background-image: url('/static/background.jpg'); /* Use the correct path to the image */
-    background-size: contain; /* or 'contain' based on your preference */
+    /* Remove height: 100vh; to allow content to extend beyond the viewport */
+    background-image: url('/static/background.jpg');
+    background-size: contain;
     background-position: cover;
     background-repeat: repeat;
 }
@@ -18,22 +17,19 @@ h2 {
     color: #BA0C2F;
     text-align: center;
     font-size: 50px;
-    margin-top: 10px; /* Adjust margin as needed */
-    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.7); /* White text shadow */
+    margin-top: 10px;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.7);
 }
 
-div {
-    position: relative;
+#image-container {
     text-align: center;
-    margin-top: 0px; /* Adjust margin as needed */
-    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.7); /* White text shadow */
 }
 
 img {
     max-width: 70%;
     height: auto;
-    border-radius: 50px;
+    border-radius: 5px;
     box-shadow: 0 0 0px rgba(0, 0, 0, 0.1);
-    margin-top: 0px;
-    margin-bottom: 100px;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
