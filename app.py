@@ -1,4 +1,4 @@
-from flask import Flask, request, session, redirect, url_for, render_template
+from flask import Flask, request, session, redirect, render_template
 import os
 from PIL import Image
 from transformers import  ViTForImageClassification
@@ -75,9 +75,6 @@ def model_choice():
                 result_image_path= predict_yolo(file_path)
                 return render_template('yolo_result.html', result_image_path=result_image_path)
 
-    except KeyError:
-        print('File path not found in the session. Please upload a file.')
-        return redirect(url_for('index'))
     except Exception as e:
         print(f"An error occurred: {str(e)}")
         return render_template('model_choice.html')
@@ -100,7 +97,7 @@ def predict_vit(file_path):
 
 def predict_yolo(file_path):
     try:
-        model = YOLO('static\yolov8n.pt')
+        model = YOLO('static/yolov8n.pt')
         results = model(file_path)
 
 
