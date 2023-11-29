@@ -1,0 +1,15 @@
+body {
+    position: absolute;
+    bottom: 10px;
+    font-family: 'Merriweather', serif; /* Use Merriweather font for the body */
+    font-size:24px;
+}
+
+.footer {
+    position: relative;
+    bottom: 10px;
+    width: 100%;
+    text-align: center;
+    color: #FFFFFF; /* White color */
+    font-size: 24px;
+}

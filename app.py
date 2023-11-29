@@ -1,23 +1,19 @@
 from flask import Flask, request, session, redirect, url_for, render_template
-
 import os
 from PIL import Image
-from torchvision import transforms
-from transformers import ViTImageProcessor, ViTForImageClassification
-from werkzeug.utils import secure_filename
+from transformers import  ViTForImageClassification
 import torch
-from torchvision import transforms
 from PIL import Image
 from transformers import ViTFeatureExtractor, ViTForImageClassification
-import numpy as np
 from ultralytics import YOLO
 
 app = Flask(__name__)
 
-UPLOAD_FOLDER = 'uploads'
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+
+UPLOAD_FOLDER = 'static'
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.secret_key = "super_secret_key"  # for flashing messages
+app.secret_key = os.urandom(24)
 
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
@@ -51,7 +47,7 @@ def upload_file():
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(file_path)
         session['file_path'] = file_path  # Save the full file path in the session
-        print('File successfully uploaded and saved!')
+        #print('File successfully uploaded and saved')
         return render_template('model_choice.html')
 
     print('Invalid file type. Please upload an image.')
@@ -83,7 +79,6 @@ def model_choice():
         return redirect(url_for('index'))
     except Exception as e:
         print(f"An error occurred: {str(e)}")
-        print('An error occurred. Please try again.')
         return render_template('model_choice.html')
 
 
@@ -96,7 +91,6 @@ def predict_vit(file_path):
         outputs = model(**inputs)
         logits = outputs.logits
         predicted_class_idx = torch.argmax(logits, dim=1).item()
-        
         predicted_class = model.config.id2label[predicted_class_idx]
         return predicted_class
     except Exception as e:
@@ -116,9 +110,10 @@ def predict_yolo(file_path):
             im_array = result.plot()
             im = Image.fromarray(im_array[..., ::-1])
             im.save(result_image_path)
-            print(result_image_path)
+            #im.show(result_image_path)
+            #print(result_image_path)
 
-        print("YOLO prediction result saved.")
+        #print("YOLO prediction result saved.")
         return result_image_path
     except Exception as e:
         return f"Error predicting with YOLO: {str(e)}", []

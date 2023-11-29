@@ -1,0 +1,40 @@
+/* styles3.css */
+body {
+    font-family: 'Merriweather', serif; /* Use Merriweather font for the body */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 110vh;
+    background-image: url('/static/background.jpg'); /* Use the correct path to the image */
+    background-size: contain; /* or 'contain' based on your preference */
+    background-position: cover;
+    background-repeat: repeat;
+}
+
+h2 {
+    color: #BA0C2F;
+    text-align: center;
+    margin-top: 20px;
+    font-size: 50px;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.7); /* White text shadow */
+}
+
+p {
+    color: #FFFFFF;
+    text-align: center;
+    margin-top: 10px;
+    font-size: 44px;
+    animation: flash 2s infinite;
+}
+
+@keyframes flash {
+    0%, 50%, 100% {
+        opacity: 1;
+    }
+    25%, 75% {
+        opacity: 0;
+    }
+}

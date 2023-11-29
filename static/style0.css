@@ -1,0 +1,38 @@
+/* styles0.css */
+body {
+    font-family: 'Merriweather', serif; /* Use Merriweather font for the body */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-image: url('/static/background.jpg'); /* Use the correct path to the image */
+    background-size: contain; /* or 'contain' based on your preference */
+    background-position: cover;
+    background-repeat: repeat;
+}
+
+h1 {
+    color: #BA0C2F;
+    text-align: center;
+    margin-bottom: 20px; /* Adjust margin as needed */
+    font-size: 50px;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.7); /* White text shadow */
+}
+
+form {
+    text-align: center;
+}
+
+input[type="file"],
+input[type="submit"] {
+    background-color: #BA0C2F;
+    color: #fff;
+    padding: 0px px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+

@@ -1,17 +1,18 @@
 <!-- yolo_result.html -->
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YOLO Result</title>
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>YOLO Result</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style2.css') }}">
+    </head>
 
 <body>
     <h2>YOLO Prediction Result</h2>
     
     <div style="position: relative;">
-        <img src='uploads\result_image.jpg' alt="YOLO Prediction" id="result-image">
+        <img src="{{url_for('static', filename='result_image.jpg')}}" align="middle" />
     </div>
 </body>
 </html>
