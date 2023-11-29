@@ -73,7 +73,7 @@ def model_choice():
 
             elif model_choice == 'yolo':
                 result_image_path= predict_yolo(file_path)
-                return render_template('yolo_result.html', result_image=result_image_path)
+                return render_template('yolo_result.html', result_image_path=result_image_path)
 
     except KeyError:
         print('File path not found in the session. Please upload a file.')
