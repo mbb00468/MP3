@@ -44,10 +44,10 @@ def upload_file():
     if file.filename == '':
         print('No selected file')
         return redirect(request.url)
-
     
     if file and allowed_file(file.filename):
-        filename = secure_filename(file.filename)  # Ensure a safe filename
+        # Use a fixed filename for overwriting
+        filename = 'uploaded_image.jpg'
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(file_path)
         session['file_path'] = file_path  # Save the full file path in the session
@@ -105,32 +105,20 @@ def predict_vit(file_path):
 
 def predict_yolo(file_path):
     try:
-        
         model = YOLO('yolov8n.pt')
         results = model(file_path)
 
-        bounding_boxes = []
-        for result in results:
-            for box in result.boxes.xyxy:
-                
-                if len(box) >= 6:
-                    bounding_boxes.append({
-                        'left': box[0].item(),
-                        'top': box[1].item(),
-                        'right': box[2].item(),
-                        'bottom': box[3].item(),
-                        'label': model.names[int(box[5].item())],
-                    })
+        # Use a fixed filename for the result image
+        result_image_filename = 'result_image.jpg'
+        result_image_path = os.path.join(UPLOAD_FOLDER, result_image_filename)
 
-        
         for i, result in enumerate(results):
             im_array = result.plot()
             im = Image.fromarray(im_array[..., ::-1])
-            result_image_path = os.path.join(UPLOAD_FOLDER, f'result_{i}.jpg')
             im.save(result_image_path)
             print(result_image_path)
 
-        print(f"YOLO prediction result: {bounding_boxes}")
+        print("YOLO prediction result saved.")
         return result_image_path
     except Exception as e:
         return f"Error predicting with YOLO: {str(e)}", []
