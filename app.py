@@ -105,17 +105,18 @@ def predict_yolo(file_path):
 
 
         # Use a fixed filename for the result image
-        result_image_filename = 'result_image.jpg'
+        result_image_filename = os.path.basename(file_path) + '_result.jpg'
         result_image_path = os.path.join(UPLOAD_FOLDER, result_image_filename)
+
 
         for i, result in enumerate(results):
             im_array = result.plot()
             im = Image.fromarray(im_array[..., ::-1])
             im.save(result_image_path)
-            #im.show(result_image_path)
+            im.show(result_image_path)
             #print(result_image_path)
 
-        #print("YOLO prediction result saved.")
+        print("YOLO prediction result saved.")
         return result_image_path
     except Exception as e:
         return f"Error predicting with YOLO: {str(e)}", []
