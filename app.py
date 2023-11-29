@@ -115,7 +115,7 @@ def predict_yolo(file_path):
             im_array = result.plot()
             im = Image.fromarray(im_array[..., ::-1])
             im.save(result_image_path)
-            im.show(result_image_path)
+            #im.show(result_image_path)
             print(result_image_path)
             session['result_image_path'] = result_image_path 
 
@@ -127,4 +127,4 @@ def predict_yolo(file_path):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
