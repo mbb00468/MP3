@@ -66,9 +66,6 @@ def model_choice():
             
             file_path = session.get('file_path')
 
-            if not file_path:
-                print('File path not found. Please upload a file.')
-                return redirect(url_for('index'))
 
             if model_choice == 'vit':
                 result = predict_vit(file_path)
