@@ -109,16 +109,15 @@ def predict_yolo(file_path):
         
             
         result_image_path = os.path.join(app.config['UPLOAD_FOLDER'], result_image_filename)
-        session['result_image_path'] = result_image_path 
-
-
+ 
 
         for i, result in enumerate(results):
             im_array = result.plot()
             im = Image.fromarray(im_array[..., ::-1])
             im.save(result_image_path)
-            #im.show(result_image_path)
+            im.show(result_image_path)
             print(result_image_path)
+            session['result_image_path'] = result_image_path 
 
         print("YOLO prediction result saved.")
         return result_image_path
@@ -128,4 +127,4 @@ def predict_yolo(file_path):
 
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(debug=True)
