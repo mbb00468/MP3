@@ -13,7 +13,7 @@ app = Flask(__name__)
 UPLOAD_FOLDER = 'static'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.secret_key = os.urandom(24)
+app.secret_key = 'rambo12'
 
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
@@ -113,7 +113,7 @@ def predict_yolo(file_path):
             im_array = result.plot()
             im = Image.fromarray(im_array[..., ::-1])
             im.save(result_image_path)
-            im.show(result_image_path)
+            #im.show(result_image_path)
             #print(result_image_path)
 
         print("YOLO prediction result saved.")
